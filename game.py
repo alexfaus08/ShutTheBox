@@ -10,16 +10,18 @@ class Game:
         self.board = Board()
 
     def check_game_over(self, roll):
-        self.game_over = self.__is_subset_sum(self.board, len(self.board), roll)
+        self.game_over = not self.__is_subset_sum(self.board.state, len(self.board.state), roll)
+        return self.game_over
 
     def is_valid_move(self, roll, doors_to_shut):
         doors_to_shut = set(doors_to_shut)
-        if roll != sum(doors_to_shut):
+        s = sum(doors_to_shut)
+        if roll != s:
             print('Doors do not add up to dice roll.')
             return False
 
         for door in doors_to_shut:
-            if not door in self.board:
+            if not door in self.board.state:
                 print('At least one is not open.')
                 return False
 
@@ -35,13 +37,13 @@ class Game:
         # If last element is greater than
         # sum, then ignore it
         if (set[n - 1] > sum) :
-            return self.is_subset_sum(set, n - 1, sum);
+            return self.__is_subset_sum(set, n - 1, sum);
 
         # else, check if sum can be obtained
         # by any of the following
         # (a) including the last element
         # (b) excluding the last element
-        return self.is_subset_sum(set, n-1, sum) or self.is_subset_sum(set, n-1, sum-set[n-1])
+        return self.__is_subset_sum(set, n-1, sum) or self.__is_subset_sum(set, n-1, sum-set[n-1])
 
     def __str__(self):
         return self.board.__str__()
@@ -54,6 +56,10 @@ try:
         roll = roll_die()
         if game.board.requires_two_dice():
             roll += roll_die()
+
+        if game.check_game_over(roll):
+            break
+
         doors_to_shut = []
         invalid_input = True
         while invalid_input:
