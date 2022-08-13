@@ -2,15 +2,18 @@ from board import Board
 
 class Game:
     def __init__(self):
-        self.game_over = False
+        self.__game_over = False
         self.__board = Board()
 
     def get_board(self):
         return self.__board
 
+    def get_game_over(self):
+        return self.__game_over
+
     def check_game_over(self, roll):
-        self.game_over = not self.__is_subset_sum(self.__board.state, len(self.__board.state), roll)
-        return self.game_over
+        self.__game_over = not self.__is_subset_sum(self.__board.state, len(self.__board.state), roll)
+        return self.__game_over
 
     def is_valid_move(self, roll, doors_to_shut):
         doors_to_shut = set(doors_to_shut)

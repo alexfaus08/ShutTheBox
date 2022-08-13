@@ -6,7 +6,7 @@ def roll_die():
 
 def main():
     game = Game()
-    while not game.game_over:
+    while not game.get_game_over():
         print(game)
 
         roll = roll_die()
