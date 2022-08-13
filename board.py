@@ -2,7 +2,7 @@ class Board:
     def __init__(self):
         self.state = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-    def shut_door(self, n):
+    def shut_box(self, n):
         self.state.remove(n)
 
     def get_score(self):

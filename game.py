@@ -23,16 +23,16 @@ class Game:
         self.__new_roll()
         self.__calculate_game_over()
 
-    def is_valid_move(self, roll, doors_to_shut):
-        doors_to_shut = set(doors_to_shut)
-        s = sum(doors_to_shut)
+    def is_valid_move(self, roll, boxes_to_shut):
+        boxes_to_shut = set(boxes_to_shut)
+        s = sum(boxes_to_shut)
         if roll != s:
-            print('Doors do not add up to dice roll.')
+            print('Boxes do not add up to dice roll.')
             return False
 
-        for door in doors_to_shut:
-            if not door in self.__board.state:
-                print('At least one is not open.')
+        for box in boxes_to_shut:
+            if not box in self.__board.state:
+                print('At least one box is not open.')
                 return False
 
         return True
