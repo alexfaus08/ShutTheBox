@@ -10,16 +10,10 @@ def main():
         while invalid_input:
             try:
                 boxes_to_shut = list(int(num) for num in input("Roll: " + str(game.get_roll()) + " -- boxes to shut >> ").strip().split())
-                if not game.is_valid_move(boxes_to_shut):
-                    print('Invalid move')
-                    continue
-
+                game.shut_boxes(boxes_to_shut)
                 invalid_input = False
-            except:
-                print("Invalid input. Please try again.\n\n")
-
-        for box in boxes_to_shut:
-            game.get_board().shut_box(box)
+            except ValueError as err:
+                print(err)
 
         game.tick()
 

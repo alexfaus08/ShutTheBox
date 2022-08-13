@@ -23,17 +23,19 @@ class Game:
         self.__new_roll()
         self.__calculate_game_over()
 
-    def is_valid_move(self, boxes_to_shut):
+    def shut_boxes(self, boxes_to_shut):
+        self.__is_valid_move(boxes_to_shut)
+        for box in boxes_to_shut:
+            self.__board.shut_box(box)
+
+    def __is_valid_move(self, boxes_to_shut):
+        """ Raises an error to the caller if the move is invalid """
         if self.__roll != sum(set(boxes_to_shut)):
-            print('Boxes do not add up to dice roll.')
-            return False
+            raise ValueError('Boxes do not add up to dice roll.')
 
         for box in boxes_to_shut:
             if not box in self.__board.state:
-                print('At least one box is not open.')
-                return False
-
-        return True
+                raise ValueError('Box ' + str(box) + ' is already closed.')
 
     def __roll_die(self):
         return randint(1, 6)
