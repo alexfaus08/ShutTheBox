@@ -5,13 +5,11 @@ def main():
     while not game.get_game_over():
         print(game)
 
-        boxes_to_shut = []
-        invalid_input = True
-        while invalid_input:
+        while True:
             try:
                 boxes_to_shut = list(int(num) for num in input("Roll: " + str(game.get_roll()) + " -- boxes to shut >> ").strip().split())
                 game.shut_boxes(boxes_to_shut)
-                invalid_input = False
+                break
             except ValueError as err:
                 print(err)
 
