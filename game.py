@@ -23,9 +23,8 @@ class Game:
         self.__new_roll()
         self.__calculate_game_over()
 
-    def is_valid_move(self, roll, boxes_to_shut):
-        # Use 'set' to remove duplicate entries and then sum them to make sure it's a valid move
-        if roll != sum(set(boxes_to_shut)):
+    def is_valid_move(self, boxes_to_shut):
+        if self.__roll != sum(set(boxes_to_shut)):
             print('Boxes do not add up to dice roll.')
             return False
 

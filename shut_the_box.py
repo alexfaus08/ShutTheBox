@@ -10,7 +10,7 @@ def main():
         while invalid_input:
             try:
                 boxes_to_shut = list(int(num) for num in input("Roll: " + str(game.get_roll()) + " -- boxes to shut >> ").strip().split())
-                if not game.is_valid_move(game.get_roll(), boxes_to_shut):
+                if not game.is_valid_move(boxes_to_shut):
                     print('Invalid move')
                     continue
 
