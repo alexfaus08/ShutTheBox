@@ -1,9 +1,13 @@
 from board import Board
+from random import randint
 
 class Game:
+    __game_over = False
+    __board = Board()
+    __roll = 0
+
     def __init__(self):
-        self.__game_over = False
-        self.__board = Board()
+        self.tick()
 
     def get_board(self):
         return self.__board
@@ -11,9 +15,13 @@ class Game:
     def get_game_over(self):
         return self.__game_over
 
-    def check_game_over(self, roll):
-        self.__game_over = not self.__is_subset_sum(self.__board.state, len(self.__board.state), roll)
-        return self.__game_over
+    def get_roll(self):
+        return self.__roll
+
+    def tick(self):
+        """ Advance the game one turn. """
+        self.__new_roll()
+        self.__calculate_game_over()
 
     def is_valid_move(self, roll, doors_to_shut):
         doors_to_shut = set(doors_to_shut)
@@ -28,6 +36,17 @@ class Game:
                 return False
 
         return True
+
+    def __roll_die(self):
+        return randint(1, 6)
+
+    def __new_roll(self):
+        self.__roll = self.__roll_die()
+        if self.__board.requires_two_dice():
+            self.__roll += self.__roll_die()
+
+    def __calculate_game_over(self):
+        self.__game_over = not self.__is_subset_sum(self.__board.state, len(self.__board.state), self.__roll)
 
     def __is_subset_sum(self, set, n, sum) :
         # Base Cases

@@ -1,27 +1,16 @@
 from game import Game
-from random import randint
-
-def roll_die():
-    return randint(1, 6)
 
 def main():
     game = Game()
     while not game.get_game_over():
         print(game)
 
-        roll = roll_die()
-        if game.get_board().requires_two_dice():
-            roll += roll_die()
-
-        if game.check_game_over(roll):
-            break
-
         doors_to_shut = []
         invalid_input = True
         while invalid_input:
             try:
-                doors_to_shut = list(int(num) for num in input("Roll: " + str(roll) + " -- doors to shut >> ").strip().split())
-                if not game.is_valid_move(roll, doors_to_shut):
+                doors_to_shut = list(int(num) for num in input("Roll: " + str(game.get_roll()) + " -- doors to shut >> ").strip().split())
+                if not game.is_valid_move(game.get_roll(), doors_to_shut):
                     print('Invalid move')
                     continue
 
@@ -31,6 +20,8 @@ def main():
 
         for door in doors_to_shut:
             game.get_board().shut_door(door)
+
+        game.tick()
 
 if __name__ == '__main__':
     try:
