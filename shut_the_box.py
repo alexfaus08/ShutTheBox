@@ -15,6 +15,8 @@ def main():
 
         game.tick()
 
+    print("\nGame over. Final score: " + str(game.get_score()))
+
 if __name__ == '__main__':
     try:
         main()

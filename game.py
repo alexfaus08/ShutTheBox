@@ -18,6 +18,9 @@ class Game:
     def get_roll(self):
         return self.__roll
 
+    def get_score(self):
+        return self.__board.get_score()
+
     def tick(self):
         """ Advance the game one turn. """
         self.__new_roll()
