@@ -3,10 +3,13 @@ from board import Board
 class Game:
     def __init__(self):
         self.game_over = False
-        self.board = Board()
+        self.__board = Board()
+
+    def get_board(self):
+        return self.__board
 
     def check_game_over(self, roll):
-        self.game_over = not self.__is_subset_sum(self.board.state, len(self.board.state), roll)
+        self.game_over = not self.__is_subset_sum(self.__board.state, len(self.__board.state), roll)
         return self.game_over
 
     def is_valid_move(self, roll, doors_to_shut):
@@ -17,7 +20,7 @@ class Game:
             return False
 
         for door in doors_to_shut:
-            if not door in self.board.state:
+            if not door in self.__board.state:
                 print('At least one is not open.')
                 return False
 
@@ -42,4 +45,4 @@ class Game:
         return self.__is_subset_sum(set, n-1, sum) or self.__is_subset_sum(set, n-1, sum-set[n-1])
 
     def __str__(self):
-        return self.board.__str__()
+        return self.__board.__str__()

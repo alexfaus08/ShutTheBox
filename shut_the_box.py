@@ -10,7 +10,7 @@ def main():
         print(game)
 
         roll = roll_die()
-        if game.board.requires_two_dice():
+        if game.get_board().requires_two_dice():
             roll += roll_die()
 
         if game.check_game_over(roll):
@@ -30,7 +30,7 @@ def main():
                 print("Invalid input. Please try again.\n\n")
 
         for door in doors_to_shut:
-            game.board.shut_door(door)
+            game.get_board().shut_door(door)
 
 if __name__ == '__main__':
     try:
