@@ -1,31 +1,55 @@
-from random import randint
 from board import Board
-
-def roll_die():
-    return randint(1, 6)
+from random import randint
 
 class Game:
+    __game_over = False
+    __board = Board()
+    __roll = 0
+
     def __init__(self):
-        self.game_over = False
-        self.board = Board()
+        self.tick()
 
-    def check_game_over(self, roll):
-        self.game_over = not self.__is_subset_sum(self.board.state, len(self.board.state), roll)
-        return self.game_over
+    def get_board(self):
+        return self.__board
 
-    def is_valid_move(self, roll, doors_to_shut):
-        doors_to_shut = set(doors_to_shut)
-        s = sum(doors_to_shut)
-        if roll != s:
-            print('Doors do not add up to dice roll.')
-            return False
+    def get_game_over(self):
+        return self.__game_over
 
-        for door in doors_to_shut:
-            if not door in self.board.state:
-                print('At least one is not open.')
-                return False
+    def get_roll(self):
+        return self.__roll
 
-        return True
+    def get_score(self):
+        return self.__board.get_score()
+
+    def tick(self):
+        """ Advance the game one turn. """
+        self.__new_roll()
+        self.__calculate_game_over()
+
+    def shut_boxes(self, boxes_to_shut):
+        self.__is_valid_move(boxes_to_shut)
+        for box in boxes_to_shut:
+            self.__board.shut_box(box)
+
+    def __is_valid_move(self, boxes_to_shut):
+        """ Raises an error to the caller if the move is invalid """
+        if self.__roll != sum(set(boxes_to_shut)):
+            raise ValueError('Boxes do not add up to dice roll.')
+
+        for box in boxes_to_shut:
+            if not box in self.__board.state:
+                raise ValueError('Box ' + str(box) + ' is already closed.')
+
+    def __roll_die(self):
+        return randint(1, 6)
+
+    def __new_roll(self):
+        self.__roll = self.__roll_die()
+        if self.__board.requires_two_dice():
+            self.__roll += self.__roll_die()
+
+    def __calculate_game_over(self):
+        self.__game_over = not self.__is_subset_sum(self.__board.state, len(self.__board.state), self.__roll)
 
     def __is_subset_sum(self, set, n, sum) :
         # Base Cases
@@ -46,34 +70,4 @@ class Game:
         return self.__is_subset_sum(set, n-1, sum) or self.__is_subset_sum(set, n-1, sum-set[n-1])
 
     def __str__(self):
-        return self.board.__str__()
-
-try:
-    game = Game()
-    while not game.game_over:
-        print(game)
-
-        roll = roll_die()
-        if game.board.requires_two_dice():
-            roll += roll_die()
-
-        if game.check_game_over(roll):
-            break
-
-        doors_to_shut = []
-        invalid_input = True
-        while invalid_input:
-            try:
-                doors_to_shut = list(int(num) for num in input("Roll: " + str(roll) + " -- doors to shut >> ").strip().split())
-                if not game.is_valid_move(roll, doors_to_shut):
-                    print('Invalid move')
-                    continue
-
-                invalid_input = False
-            except:
-               print("Invalid input. Please try again.\n\n")
-
-        for door in doors_to_shut:
-            game.board.shut_door(door)
-except KeyboardInterrupt:
-    exit()
+        return self.__board.__str__()
