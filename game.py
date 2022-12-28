@@ -2,11 +2,10 @@ from board import Board
 from random import randint
 
 class Game:
-    __game_over = False
-    __board = Board()
-    __roll = 0
-
     def __init__(self):
+        self.__board = Board()
+        self.__roll = 0
+        self.__game_over = False
         self.tick()
 
     def get_board(self):

@@ -27,13 +27,13 @@ def make_random_choice(roll, board):
     return valid_choices[random.randint(0, len(valid_choices) - 1)]
 
 
-def make_qtable_choice(roll, board, qtable, columns):
+def make_qtable_choice(roll, board, qtable, columns, state):
     choices = get_possibilities(roll)
     valid_choices_values = []
     valid_choices = []
     for choice in choices:
         if all(elem in board for elem in choice):
-            valid_choices_values.append(qtable[columns.index(choice)])
+            valid_choices_values.append(qtable[state][columns.index(choice)])
             valid_choices.append(choice)
     choice_index = np.argmax(valid_choices_values)
     return valid_choices[choice_index]
@@ -46,9 +46,6 @@ def main():
     # number of episode we will run
     n_episodes = 10000
 
-    # maximum of iteration per episode
-    max_iter_episode = 100
-
     # initialize the exploration probability to 1
     exploration_proba = 1
 
@@ -59,7 +56,7 @@ def main():
     min_exploration_proba = 0.01
 
     # discounted factor
-    gamma = 0.99
+    discount_factor = 0.99
 
     all_rewards = list()
 
@@ -77,9 +74,8 @@ def main():
             if np.random.uniform(0, 1) < exploration_proba:
                 choice = make_random_choice(game.get_roll(), game.get_board().state)
             else:
-                choice = make_qtable_choice(game.get_roll(), game.get_board().state, qtable, columns)
+                choice = make_qtable_choice(game.get_roll(), game.get_board().state, qtable, columns, current_state)
 
-            print(choice)
             game.shut_boxes(choice)
 
             game.tick()
@@ -87,18 +83,16 @@ def main():
             column_index = columns.index(choice)
             if game.get_game_over() and game.get_score() == 0: # Winner
                 next_state = 1
-                qtable[1][column_index] = game.get_score()
             elif game.get_game_over(): # Record Loss
                 next_state = 2
-                qtable[2][column_index] = game.get_score()
             else: # Keep Going
                 next_state = 0
-                qtable[0][column_index] = game.get_score()
 
             reward = game.get_score()
+
             # We update our Q-table using the Q-learning iteration
             qtable[current_state][column_index] = (1 - lr) * qtable[current_state][column_index] + lr * (
-                    reward + gamma * max(qtable[next_state][:]))
+                    reward + discount_factor * max(qtable[current_state]))
             current_state = next_state
 
             total_episode_reward += reward
@@ -107,7 +101,7 @@ def main():
             all_rewards.append(total_episode_reward)
 
         print("\nGame over. Final score: " + str(game.get_score()))
-
+    print(qtable)
 
 if __name__ == '__main__':
     try:
