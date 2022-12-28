@@ -1,2 +1,5 @@
-- [x] Get all valid choices
-- [] find choice index on q table
+Q table structure:
+    columns are choices of door combinations
+    row 0 is keep going state
+    row 1 is winning state
+    row 2 is losing state
